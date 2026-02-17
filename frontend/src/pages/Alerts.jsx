@@ -47,37 +47,37 @@ const Alerts = () => {
             case 'critical':
                 return {
                     label: 'Critical',
-                    badgeClass: 'bg-red-500/10 text-red-500 border-red-500/20 shadow-[0_0_10px_rgba(239,68,68,0.15)]',
-                    borderClass: 'hover:border-red-500/30',
-                    riskColor: 'text-red-400'
+                    badgeClass: 'bg-red-100 text-red-700 border-red-200 shadow-sm',
+                    borderClass: 'border-l-4 border-l-red-500 hover:bg-red-50',
+                    riskColor: 'text-red-600'
                 };
             case 'immediate':
                 return {
                     label: 'Immediate Care',
-                    badgeClass: 'bg-orange-500/10 text-orange-500 border-orange-500/20 shadow-[0_0_10px_rgba(249,115,22,0.15)]',
-                    borderClass: 'hover:border-orange-500/30',
-                    riskColor: 'text-orange-400'
+                    badgeClass: 'bg-orange-100 text-orange-700 border-orange-200 shadow-sm',
+                    borderClass: 'border-l-4 border-l-orange-500 hover:bg-orange-50',
+                    riskColor: 'text-orange-600'
                 };
             case 'warning':
                 return {
                     label: 'Warning',
-                    badgeClass: 'bg-amber-500/10 text-amber-500 border-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.15)]',
-                    borderClass: 'hover:border-amber-500/30',
-                    riskColor: 'text-amber-400'
+                    badgeClass: 'bg-amber-100 text-amber-700 border-amber-200 shadow-sm',
+                    borderClass: 'border-l-4 border-l-amber-500 hover:bg-amber-50',
+                    riskColor: 'text-amber-600'
                 };
             case 'monitor':
                 return {
                     label: 'Monitor',
-                    badgeClass: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-                    borderClass: 'hover:border-blue-500/30',
-                    riskColor: 'text-blue-400'
+                    badgeClass: 'bg-blue-100 text-blue-700 border-blue-200 shadow-sm',
+                    borderClass: 'border-l-4 border-l-blue-500 hover:bg-blue-50',
+                    riskColor: 'text-blue-600'
                 };
             default:
                 return {
                     label: 'Alert',
-                    badgeClass: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
-                    borderClass: 'hover:border-slate-500/30',
-                    riskColor: 'text-slate-400'
+                    badgeClass: 'bg-slate-100 text-slate-700 border-slate-200',
+                    borderClass: 'border-l-4 border-l-slate-400 hover:bg-slate-50',
+                    riskColor: 'text-slate-600'
                 };
         }
     };
@@ -85,9 +85,9 @@ const Alerts = () => {
     return (
         <div className="max-w-4xl mx-auto">
             {/* Header */}
-            <div className="flex items-center gap-3 mb-6 border-b border-slate-800 pb-4">
-                <AlertCircle className="w-5 h-5 text-red-500" />
-                <h1 className="text-lg font-semibold text-white">Students Requiring Immediate Intervention</h1>
+            <div className="flex items-center gap-3 mb-6 border-b border-slate-200 pb-4">
+                <AlertCircle className="w-6 h-6 text-red-600" />
+                <h1 className="text-xl font-bold text-slate-800">Students Requiring Immediate Intervention</h1>
             </div>
 
             {/* List */}
@@ -97,17 +97,17 @@ const Alerts = () => {
                     return (
                         <div
                             key={index}
-                            className={`bg-slate-900/50 border border-slate-800 ${severityConfig.borderClass} transition-colors p-4 rounded-lg flex items-center justify-between group`}
+                            className={`bg-white border border-slate-200 ${severityConfig.borderClass} transition-all p-4 rounded-lg flex items-center justify-between group shadow-sm hover:shadow-md`}
                         >
                             <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 bg-slate-800/50 rounded-full flex items-center justify-center border border-slate-700">
-                                    <User className="text-slate-400 w-5 h-5" />
+                                <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center border border-slate-200 text-slate-500">
+                                    <User className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <h3 className="text-white font-medium text-sm">
+                                    <h3 className="text-slate-900 font-semibold text-sm">
                                         {student.name}
                                     </h3>
-                                    <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
+                                    <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
                                         <Brain className="w-3 h-3" />
                                         <span>{student.mood}</span>
                                     </div>
@@ -116,13 +116,13 @@ const Alerts = () => {
 
                             <div className="flex items-center gap-6">
                                 <div className="text-right">
-                                    <span className="block text-[10px] text-slate-500 uppercase tracking-wider">Risk %</span>
+                                    <span className="block text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Risk Level</span>
                                     <div className={`flex items-center justify-end gap-1 ${severityConfig.riskColor} font-bold text-sm`}>
                                         <Activity className="w-3 h-3" />
                                         <span>{student.risk}%</span>
                                     </div>
                                 </div>
-                                <span className={`${severityConfig.badgeClass} text-[10px] uppercase font-bold px-2 py-1 rounded border tracking-wide`}>
+                                <span className={`${severityConfig.badgeClass} text-[10px] uppercase font-bold px-3 py-1 rounded-full border tracking-wide`}>
                                     {severityConfig.label}
                                 </span>
                             </div>
