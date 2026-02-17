@@ -102,3 +102,13 @@ def seed_data():
     collection.insert_many(sample_students)
     return {"message": "Sample students inserted"}
 
+
+@app.get("/students")
+def get_students():
+    students = list(collection.find({}, {"_id": 0}))
+    return {"students": students}
+
+@app.get("/high-risk")
+def get_high_risk_students():
+    high_risk_students = list(collection.find({"level": "HIGH"}, {"_id": 0}))
+    return high_risk_students
