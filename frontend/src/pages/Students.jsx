@@ -10,6 +10,7 @@ const Students = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     useEffect(() => {
         const fetchStudents = async () => {
@@ -76,14 +77,20 @@ const Students = () => {
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <div className={`flex items-center h-10 transition-all duration-300 ease-in-out ${isSearchOpen ? 'w-64 bg-white border-2 border-slate-200 px-3 rounded-lg' : 'w-8 bg-transparent border-none px-0 justify-center'}`}>
+                        <button
+                            onClick={() => setIsSearchOpen(!isSearchOpen)}
+                            className="flex-shrink-0 focus:outline-none"
+                        >
+                            <Search className="w-5 h-5 text-slate-400 hover:text-slate-600 transition-colors" />
+                        </button>
                         <input
                             type="text"
-                            placeholder="Search name or ID..."
+                            placeholder="Search..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="bg-white border-2 border-slate-200 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-800 focus:ring-2 focus:ring-primary focus:border-transparent outline-none w-64 transition-all placeholder:text-slate-400"
+                            onBlur={() => !searchTerm && setIsSearchOpen(false)}
+                            className={`bg-transparent border-none outline-none text-sm text-slate-800 placeholder-slate-400 ml-2 ${isSearchOpen ? 'w-full opacity-100' : 'w-0 opacity-0'} transition-all duration-300`}
                         />
                     </div>
                     <button className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-slate-50 rounded-lg text-sm font-medium transition-colors border-2 border-slate-200 text-slate-600 hover:text-slate-800 hover:border-slate-300">
