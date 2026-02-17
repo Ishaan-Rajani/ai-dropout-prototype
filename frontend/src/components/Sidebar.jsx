@@ -17,7 +17,7 @@ const Sidebar = () => {
                 <div className="p-2 bg-primary/10 rounded-lg">
                     <Brain className="w-6 h-6 text-primary" />
                 </div>
-                <span className="text-xl font-bold text-slate-800 tracking-tight">MindGuard AI</span>
+                <span className="text-xl font-bold text-slate-800 tracking-tight">EduCare AI</span>
             </div>
 
             {/* Navigation */}

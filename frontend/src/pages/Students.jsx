@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Users, Filter, Search, MoreHorizontal, User } from 'lucide-react';
+import { mockStudents } from '../data/students';
 
 const Students = () => {
     const navigate = useNavigate();
@@ -14,106 +15,17 @@ const Students = () => {
         const fetchStudents = async () => {
             const localStudents = JSON.parse(localStorage.getItem('addedStudents') || '[]');
             try {
+                // Try fetching from API but always include mock data for this demo
                 const response = await axios.get('http://127.0.0.1:8000/students');
-                // Ensure data is an array
-                const data = Array.isArray(response.data) ? response.data :
+                const apiData = Array.isArray(response.data) ? response.data :
                     (response.data.students || []);
-                setStudents([...data, ...localStudents]);
+
+                // Combine: Local Store -> API -> Mock Data
+                setStudents([...localStudents, ...apiData, ...mockStudents]);
             } catch (err) {
-                console.error("Error fetching students:", err);
-                setError("Failed to load students directory.");
-                // Fallback / Mock Data if API fails for demo purposes
-                setStudents([
-                    ...localStudents,
-                    {
-                        student_id: 101,
-                        name: "Sarah Connor",
-                        program: "Computer Science",
-                        email: "sarah.connor@uni.edu",
-                        attendance: 92,
-                        grades: 88,
-                        risk_level: 'LOW',
-                        risk_percentage: 12,
-                        last_active: "2h ago"
-                    },
-                    {
-                        student_id: 102,
-                        name: "John Doe",
-                        program: "Civil Engineering",
-                        email: "john.doe@uni.edu",
-                        attendance: 65,
-                        grades: 54,
-                        risk_level: 'HIGH',
-                        risk_percentage: 89,
-                        last_active: "1d ago"
-                    },
-                    {
-                        student_id: 103,
-                        name: "Emily Blunt",
-                        program: "Psychology",
-                        email: "emily.b@uni.edu",
-                        attendance: 78,
-                        grades: 72,
-                        risk_level: 'MEDIUM',
-                        risk_percentage: 45,
-                        last_active: "5h ago"
-                    },
-                    {
-                        student_id: 104,
-                        name: "Michael Scott",
-                        program: "Business Admin",
-                        email: "m.scott@uni.edu",
-                        attendance: 95,
-                        grades: 91,
-                        risk_level: 'LOW',
-                        risk_percentage: 5,
-                        last_active: "30m ago"
-                    },
-                    {
-                        student_id: 105,
-                        name: "Jessica Jones",
-                        program: "Physics",
-                        email: "j.jones@uni.edu",
-                        attendance: 82,
-                        grades: 79,
-                        risk_level: 'MEDIUM',
-                        risk_percentage: 38,
-                        last_active: "3h ago"
-                    },
-                    {
-                        student_id: 106,
-                        name: "Saitama One",
-                        program: "Physical Education",
-                        email: "saitama@uni.edu",
-                        attendance: 45,
-                        grades: 60,
-                        risk_level: 'HIGH',
-                        risk_percentage: 92,
-                        last_active: "2d ago"
-                    },
-                    {
-                        student_id: 107,
-                        name: "Tony Stark",
-                        program: "Mechanical Engineering",
-                        email: "tony@stark.edu",
-                        attendance: 98,
-                        grades: 99,
-                        risk_level: 'LOW',
-                        risk_percentage: 2,
-                        last_active: "Active now"
-                    },
-                    {
-                        student_id: 108,
-                        name: "Bruce Banner",
-                        program: "Nuclear Physics",
-                        email: "bruce@uni.edu",
-                        attendance: 85,
-                        grades: 95,
-                        risk_level: 'LOW',
-                        risk_percentage: 15,
-                        last_active: "1h ago"
-                    },
-                ]);
+                console.error("Error fetching students (using fallback):", err);
+                // Fallback: Local + Mock
+                setStudents([...localStudents, ...mockStudents]);
             } finally {
                 setLoading(false);
             }
@@ -189,8 +101,8 @@ const Students = () => {
                         onClick={() => navigate(`/student/${student.student_id}`)}
                         className={`bg-white border border-slate-200 rounded-xl p-6 cursor-pointer hover:shadow-lg hover:border-slate-300 transition-all group relative overflow-hidden border-l-4 ${getRiskBorder(student.risk_level)}`}
                     >
-                        <div className="flex justify-between items-start mb-4">
-                            <div className="flex items-center gap-3">
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 group-hover:bg-slate-200 transition-colors font-bold text-lg">
                                     {student.name ? student.name.charAt(0) : <User className="w-6 h-6" />}
                                 </div>
@@ -203,39 +115,6 @@ const Students = () => {
                             </div>
                             <div className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border ${getRiskColor(student.risk_level)}`}>
                                 {student.risk_level}
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-2 text-xs text-slate-400 mb-4 px-1">
-                            <span>ID: {student.student_id}</span>
-                            <span>•</span>
-                            <span className="truncate max-w-[150px]">{student.email || `student${student.student_id}@uni.edu`}</span>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4 border-t border-slate-100 pt-4">
-                            <div>
-                                <p className="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Attendance</p>
-                                <p className={`font-bold text-base ${student.attendance < 75 ? 'text-rose-600' : 'text-slate-800'}`}>
-                                    {student.attendance}%
-                                </p>
-                            </div>
-                            <div>
-                                <p className="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Grades</p>
-                                <p className={`font-bold text-base ${student.grades < 70 ? 'text-amber-600' : 'text-slate-800'}`}>
-                                    {student.grades}%
-                                </p>
-                            </div>
-                            <div>
-                                <p className="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Last Active</p>
-                                <p className="text-slate-600 text-sm font-medium">
-                                    {student.last_active || "Recently"}
-                                </p>
-                            </div>
-                            <div>
-                                <p className="text-[10px] text-slate-400 uppercase font-semibold tracking-wider">Risk Score</p>
-                                <p className={`${student.risk_percentage > 50 ? 'text-rose-600' : 'text-emerald-600'} font-bold text-base`}>
-                                    {student.risk_percentage}%
-                                </p>
                             </div>
                         </div>
                     </div>

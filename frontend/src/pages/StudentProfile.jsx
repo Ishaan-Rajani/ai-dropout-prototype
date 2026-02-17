@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 
+import { mockStudents } from '../data/students';
+
 const StudentProfile = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -28,9 +30,8 @@ const StudentProfile = () => {
         const fetchStudent = async () => {
             try {
                 const response = await axios.get(`http://127.0.0.1:8000/students`);
-                // Ensure data is an array (API returns object with students property)
+                // Ensure data is an array
                 const data = Array.isArray(response.data) ? response.data : (response.data.students || []);
-                // Handle both string and number IDs potentially
                 let found = data.find(s => s.student_id == id || s.id == id);
 
                 // If not found in API, check Local Storage
@@ -39,9 +40,14 @@ const StudentProfile = () => {
                     found = localStudents.find(s => s.student_id == id || s.id == id);
                 }
 
-                // If still not found, use mock data
+                // If still not found, check shared Mock Data
                 if (!found) {
-                    console.log("Student not found in API or Local, using mock data");
+                    found = mockStudents.find(s => s.student_id == id);
+                }
+
+                // If absolutely not found, use generic fallback (last resort)
+                if (!found) {
+                    console.log("Student not found in API, Local, or Mock. Using generic fallback.");
                     found = {
                         student_id: id,
                         name: `Student ${id}`,
@@ -68,18 +74,28 @@ const StudentProfile = () => {
                 setTimeout(() => setShowRisk(true), 100);
             } catch (err) {
                 console.error("Failed to fetch student details", err);
-                // API failed completely, use mock data
-                const mockStudent = {
-                    student_id: id,
-                    name: `Student ${id}`,
-                    attendance: 85,
-                    grades: 78,
-                    assignments: 12,
-                    academic_risk: 22,
-                    sentiment_risk: 35,
-                    crisis_detected: false
-                };
-                setStudent(mockStudent);
+                // API failed completely, try Local -> Mock -> Generic
+                let found = null;
+                const localStudents = JSON.parse(localStorage.getItem('addedStudents') || '[]');
+                found = localStudents.find(s => s.student_id == id || s.id == id);
+
+                if (!found) {
+                    found = mockStudents.find(s => s.student_id == id);
+                }
+
+                if (!found) {
+                    found = {
+                        student_id: id,
+                        name: `Student ${id}`,
+                        attendance: 85,
+                        grades: 78,
+                        assignments: 12,
+                        academic_risk: 22,
+                        sentiment_risk: 35,
+                        crisis_detected: false
+                    };
+                }
+                setStudent(found);
                 setTimeout(() => setShowRisk(true), 100);
             } finally {
                 setLoading(false);

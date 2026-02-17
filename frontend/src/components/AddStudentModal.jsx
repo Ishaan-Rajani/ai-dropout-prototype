@@ -26,8 +26,9 @@ const AddStudentModal = ({ isOpen, onClose, onStudentAdded }) => {
 
         // Sentiment weight
         let sentimentRisk = 20;
-        if (data.mood === 'good') sentimentRisk = 10;
-        if (data.mood === 'bad') sentimentRisk = 60;
+        const moodLower = (data.mood || '').toLowerCase();
+        if (moodLower.includes('good') || moodLower.includes('happy') || moodLower.includes('excell')) sentimentRisk = 10;
+        if (moodLower.includes('bad') || moodLower.includes('stress') || moodLower.includes('anx') || moodLower.includes('poor')) sentimentRisk = 60;
 
         const totalRisk = Math.round((attendanceRisk * 0.4) + (gradesRisk * 0.4) + (sentimentRisk * 0.2));
 
@@ -104,7 +105,7 @@ const AddStudentModal = ({ isOpen, onClose, onStudentAdded }) => {
                             </h2>
                             <button
                                 onClick={onClose}
-                                className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
+                                className="p-1 rounded-full bg-transparent shadow-none text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
                             >
                                 <X className="w-5 h-5" />
                             </button>
@@ -186,16 +187,17 @@ const AddStudentModal = ({ isOpen, onClose, onStudentAdded }) => {
 
                                 <div className="space-y-4">
                                     <div>
-                                        <select
+                                        <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
+                                            Observed Mood
+                                        </label>
+                                        <input
+                                            type="text"
                                             name="mood"
                                             value={formData.mood}
                                             onChange={handleChange}
-                                            className="w-full bg-white border-2 border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium appearance-none cursor-pointer"
-                                        >
-                                            <option value="good">Good</option>
-                                            <option value="okay">Okay</option>
-                                            <option value="bad">High Risk</option>
-                                        </select>
+                                            className="w-full bg-white border-2 border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                                            placeholder="e.g. Focused, Anxious"
+                                        />
                                     </div>
 
                                     <textarea
