@@ -69,3 +69,36 @@ def predict(data: StudentData):
         "risk_percentage": final_risk,
         "risk_level": risk_level
     }
+
+@app.post("/seed")
+def seed_data():
+    sample_students = [
+        {
+            "attendance": 85,
+            "grades": 78,
+            "assignments": 90,
+            "mood": "Feeling good and motivated",
+            "risk": 10,
+            "level": "LOW"
+        },
+        {
+            "attendance": 55,
+            "grades": 60,
+            "assignments": 40,
+            "mood": "Feeling stressed about exams",
+            "risk": 50,
+            "level": "MEDIUM"
+        },
+        {
+            "attendance": 40,
+            "grades": 35,
+            "assignments": 30,
+            "mood": "I feel hopeless and want to give up",
+            "risk": 90,
+            "level": "HIGH"
+        }
+    ]
+
+    collection.insert_many(sample_students)
+    return {"message": "Sample students inserted"}
+

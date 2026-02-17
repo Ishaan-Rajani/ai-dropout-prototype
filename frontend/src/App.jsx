@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Students from './pages/Students';
+import StudentProfile from './pages/StudentProfile';
 import Alerts from './pages/Alerts';
 import Analytics from './pages/Analytics';
 
@@ -13,6 +14,7 @@ const App = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="students" element={<Students />} />
+          <Route path="student/:id" element={<StudentProfile />} />
           <Route path="alerts" element={<Alerts />} />
           <Route path="analytics" element={<Analytics />} />
           {/* Catch all redirect to dashboard */}
